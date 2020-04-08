@@ -7,6 +7,7 @@ class Compressor:
         self.__dict_length = 256
         self.__uncompressed_string = uncompessed_string
         self.__string_table = {chr(ind): ind for ind in range(self.dict_size)}
+        print(self.__string_table)
 
     @property
     def dict_size(self):
@@ -27,6 +28,7 @@ class Compressor:
         compressed = []
 
         for next in self.__uncompressed_string:
+            next = str(next)
             pattern = previous + next
             if previous + next in self.__string_table.keys():
                 previous = pattern
@@ -44,4 +46,8 @@ class Compressor:
 
 
 if __name__ == '__main__':
-    pass
+    # from sys import getsizeof
+    # a = "gabba gabba yo gabba"
+    # comp = Compressor(a)
+    # print(comp.compress())
+    # print(f'{304:016b}')
