@@ -51,3 +51,4 @@ if __name__ == '__main__':
     # comp = Compressor(a)
     # print(comp.compress())
     # print(f'{304:016b}')
+    pass
