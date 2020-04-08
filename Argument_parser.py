@@ -20,5 +20,4 @@ class Argument_parser:
     def to_decompress(self):
         return self.__parsed.decompress
 
-# if __name__ == '__main__':
-#     parser = Argument_parser()
+
