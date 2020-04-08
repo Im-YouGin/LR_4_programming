@@ -1,4 +1,10 @@
 def int_to_bit(intnumber, bin_length=None):
+    """
+    Converts integer number to bit sequence. Also padds the result to the specified length.
+    :param intnumber:
+    :param bin_length:
+    :return:
+    """
     tmp_number = intnumber
     res_reversed = []
     while tmp_number:
@@ -14,9 +20,14 @@ def int_to_bit(intnumber, bin_length=None):
     return padded_res
 
 def bit_to_byte(bits):
+    """
+    WILL BE CHANGED to convert bit sequences to bytes taking max sequence width into account.
+    :param bits:
+    :return:
+    """
     res_number = []
     tmp_res = 0
-    bit_number = len(bits)
+    bit_number = len(bits) - 1
 
     for bit in bits:
         if bit:
@@ -48,4 +59,5 @@ def get_bytes(filepath):
 
 
 
-print(int_to_bit(335, 15))
+
+print(bit_to_byte([1,0,1,1,1,0,0,1,1]))
