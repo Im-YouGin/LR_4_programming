@@ -16,7 +16,7 @@ class Compressor:
         return self.__string_table[key]
 
     @dict_size.setter
-    def __dict_size(self, value):
+    def __set_dict_size(self, value):
         self.__dict_length = value
 
     def __set_table_id(self, value):
@@ -34,7 +34,7 @@ class Compressor:
             else:
                 compressed.append(self.get_table_id(previous))
                 self.__set_table_id(pattern)
-                self.__dict_size += 1
+                self.__set_dict_size += 1
                 previous = next
 
         if previous:
