@@ -7,6 +7,7 @@ def int_to_bit(intnumber, bin_length=None):
     """
     tmp_number = intnumber
     res_reversed = []
+
     while tmp_number:
         res_reversed.append(tmp_number & 1)
         tmp_number = tmp_number >> 1
@@ -27,22 +28,22 @@ def bit_to_byte(bits):
     """
     res_number = []
     tmp_res = 0
-    bit_number = len(bits) - 1
+    bit_number = 7
 
     for bit in bits:
         if bit:
-            a = 1 << bit_number
-            tmp_res = tmp_res | a
+            new = 1 << bit_number
+            tmp_res = tmp_res | new
 
         if bit_number:
             bit_number = bit_number - 1
 
         else:
             res_number.append(tmp_res)
-            bit_number = len(bits)
+            bit_number = 7
             tmp_res = 0
 
-    if bit_number < len(bits):
+    if bit_number < 7:
         res_number.append(tmp_res)
 
     return res_number
@@ -57,4 +58,3 @@ def get_bytes(filepath):
 
     return bytes
 
-print(bit_to_byte([1,0,1,1,1,0,0,1,1]))
