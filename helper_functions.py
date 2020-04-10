@@ -57,7 +57,4 @@ def get_bytes(filepath):
 
     return bytes
 
-
-
-
 print(bit_to_byte([1,0,1,1,1,0,0,1,1]))
