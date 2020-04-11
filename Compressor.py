@@ -3,11 +3,9 @@ class Compressor:
     Compression using Lempel–Ziv–Welch (LZW) Algorithm.
     '''
 
-    def __init__(self, uncompessed_string):
+    def __init__(self, MAX_CODE_SIZE=2**12):
         self.__dict_length = 256
-        self.__uncompressed_string = uncompessed_string
         self.__string_table = {chr(ind): ind for ind in range(self.dict_size)}
-        print(self.__string_table)
 
     @property
     def dict_size(self):
@@ -17,17 +15,17 @@ class Compressor:
         return self.__string_table[key]
 
     @dict_size.setter
-    def __set_dict_size(self, value):
+    def dict_size(self, value):
         self.__dict_length = value
 
-    def __set_table_id(self, value):
+    def set_table_id(self, value):
         self.__string_table[value] = self.dict_size
 
-    def compress(self):
+    def compress(self, uncompressed_bytes):
         previous = ''
         compressed = []
 
-        for next in self.__uncompressed_string:
+        for next in uncompressed_bytes:
             next = str(next)
             pattern = previous + next
             if previous + next in self.__string_table.keys():
@@ -35,8 +33,8 @@ class Compressor:
 
             else:
                 compressed.append(self.get_table_id(previous))
-                self.__set_table_id(pattern)
-                self.__set_dict_size += 1
+                self.set_table_id(pattern)
+                self.dict_size += 1
                 previous = next
 
         if previous:
@@ -45,10 +43,5 @@ class Compressor:
         return compressed
 
 
-if __name__ == '__main__':
-    # from sys import getsizeof
-    # a = "gabba gabba yo gabba"
-    # comp = Compressor(a)
-    # print(comp.compress())
-    # print(f'{304:016b}')
-    pass
+
+
