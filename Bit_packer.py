@@ -1,6 +1,7 @@
 from helper_functions import *
 import struct
 
+
 class Bit_packer:
     """
     Tranlates compressed Lempel-Ziv-Welch sequence to packed stream of bytes.
@@ -50,6 +51,7 @@ class Bit_packer:
 
     def get_final_byte_seq(self):
         return self.__final_byte_seq
+
     def set_final_byte_seq(self, value):
         self.__final_byte_seq.append(value)
 
@@ -76,7 +78,7 @@ class Bit_packer:
                 while len(self.get_bits_container()) % 8:
                     self.extend_bits_container([0])
 
-            if  point in [self.new_points_ind, self.init_table_lenght]:
+            if point in [self.new_points_ind, self.init_table_lenght]:
                 self.bin_length = self.min_length
                 self.code_size = self.init_length
 
@@ -97,10 +99,11 @@ class Bit_packer:
             for byte in _bytes:
                 self.set_final_byte_seq(struct.pack('B', byte))
 
-        return self.get_final_byte_seq()
+        return b''.join(self.get_final_byte_seq())
 
 
 if __name__ == '__main__':
-    packer = Bit_packer(511)
-    packed = packer.pack([1, 257, 137, 56, 84, 300, 227, 502])
+    packer = Bit_packer(300)
+    packed = packer.pack([103, 97, 98, 98, 97, 32, 256,
+                          258, 260, 121, 111, 261, 257])
     print(packed)
