@@ -61,9 +61,3 @@ class Decompressor:
             self.string = self.table_id(code)
 
         return self.decompressed
-
-
-
-
-decom = Decompressor()
-print(decom.decompress([103, 97, 98, 98, 97, 32, 256, 258, 260, 121, 111, 261, 257]))
