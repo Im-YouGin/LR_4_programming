@@ -99,7 +99,3 @@ class Bit_unpacker:
                     self.re_passed((8 - self.passed) % 8)
 
         return self.unpacked
-
-
-decom = Bit_unpacker(300)
-print(decom.unpack(b'3\x98LF#\x08\x82\x01\x02\x82\x1eM\xf0X\x08'))
