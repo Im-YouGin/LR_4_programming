@@ -7,7 +7,7 @@ class Argument_parser:
 
     __parser = ArgumentParser()
     __parser.add_argument('--compress', nargs='+', help='To comrpess: 1st argument - output file, other arguments - files to be compessed')
-    __parser.add_argument('--decompress', nargs='+', help='To decomrpess: file to be decompressed' )
+    __parser.add_argument('--decompress', help='To decomrpess: file to be decompressed' )
 
     def __init__(self):
         self.__parsed = Argument_parser.__parser.parse_args()

@@ -32,8 +32,8 @@ class Compressor:
 
     def build_table(self):
         self.__string_table = {chr(ind): ind for ind in range(self.table_size)}
-        self.__string_table[self.init_table_lenght] = self.init_table_lenght
-        self.__string_table[self.new_points_ind] = self.new_points_ind
+        # self.__string_table[self.init_table_lenght] = self.init_table_lenght
+        # self.__string_table[self.new_points_ind] = self.new_points_ind
 
     @table_size.setter
     def table_size(self, value):
@@ -49,21 +49,27 @@ class Compressor:
 
         for next in uncompressed_bytes:
             next = str(next)
-            pattern = previous + next
-            if previous + next in self.__string_table.keys():
+            pattern = '-'.join([previous, next])
+            if pattern in self.__string_table.keys():
                 previous = pattern
-
-            elif self.table_size < self.max_code_size:
+            else:
                 compressed.append(self.get_table_id(previous))
-                self.set_table_id(pattern)
-                self.table_size += 1
+                if self.table_size <= self.max_code_size:
+                    self.set_table_id(pattern)
+                    self.table_size += 1
                 previous = next
 
-            elif self.table_size >= self.max_code_size:
-                if previous:
-                    compressed.append(self.get_table_id(previous))
-                self.build_table()
+        if previous in self.__string_table.keys():
+            compressed.append(self.get_table_id(previous))
+
         return compressed
+
+
+
+if __name__ == '__main__':
+    packer = Compressor()
+    packed = packer.compress([103, 97, 98])
+    print(packed)
 
 
 

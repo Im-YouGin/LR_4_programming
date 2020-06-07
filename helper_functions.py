@@ -1,3 +1,4 @@
+import struct
 def int_to_bit(intnumber, bin_length=None):
     """
     Converts integer number to bit sequence. Also padds the result to the specified length.
@@ -75,13 +76,23 @@ def bits_to_int(bits):
 
     return num
 
+def filebytes(fileobj, buffersize=1024):
+    """
+    Convenience for iterating over the bytes in a file. Given a
+    file-like object (with a read(int) method), returns an iterator
+    over the bytes of that file.
+    """
+    buff = fileobj.read(buffersize)
+    while buff:
+        for byte in buff: yield byte
+        buff = fileobj.read(buffersize)
 
-def get_bytes(filepath):
-    bytes = []
-    file = open(filepath, 'rb')
-    data = file.read()
 
-    for byte in data:
-        bytes.append(byte)
-
-    return bytes
+def readbytes(filename, buffersize=1024):
+    """
+    Opens a file named by filename and iterates over the L{filebytes}
+    found therein.  Will close the file when the bytes run out.
+    """
+    infile = open(filename, "rb")
+    for byte in filebytes(infile, buffersize):
+        yield byte
