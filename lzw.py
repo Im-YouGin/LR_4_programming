@@ -39,7 +39,8 @@ def compress(data):
             string = symbol
     if string in dictionary:
         compressed_data.append(dictionary[string])
-    return compressed_data, dictionary_size, dictionary
+    dct_reverse = {v: k for k,v in dictionary.items()}
+    return compressed_data, dictionary_size
 
 def decompress(compressed_data, dict_size):
     next_code = 256
@@ -61,14 +62,16 @@ def decompress(compressed_data, dict_size):
 
 if __name__ == '__main__':
     print('Original:', getsizeof(data))
-    compressed, size, dct = compress(data)
-    dct = {v: k for k, v in dct.items()}
+    print(data)
+    compressed, size = compress(data)
+    print(compressed)
+    # s = pickle.dumps()
 
-    # s = pickle.dumps(b''.join([dct[x] for x in compressed]))
-    s = pickle.dumps(b''.join([dct[x] for x in compressed]))
+    print('Compressed:', getsizeof(compressed))
 
-    print('Compressed:', getsizeof(s))
-
-    decompressed = decompress(data, size, dct)
-    print('Decompressed:', getsizeof(decompressed))
+    decompressed = decompress(data, size)
+    _bytes = bytearray(decompressed)
+    image = Image.open(io.BytesIO(_bytes))
+    image.show()
+    print('Decompressed:', getsizeof(_bytes))
 
