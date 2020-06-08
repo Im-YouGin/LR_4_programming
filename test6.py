@@ -112,7 +112,8 @@ class LZ77Compressor:
 
                 for i in range(length):
                     output_buffer.append(output_buffer[-distance])
-        out_data = ''.join(output_buffer)
+        print(output_buffer)
+        out_data = b''.join(output_buffer)
 
         if output_file_path:
             try:
@@ -162,14 +163,21 @@ class LZ77Compressor:
 if __name__ == '__main__':
     compressor = LZ77Compressor()
     compressor.compress('bmp (2).bmp', output_file_path='bmp_packed.bmp')
-    compressor.decompress()
+    compressor.decompress('bmp_packed.bmp', output_file_path='bmp_unpacked.bmp')
+
     with open('bmp (2).bmp', 'rb') as f:
         raw = f.read()
     with open('bmp_packed.bmp', 'rb') as f:
         packed = f.read()
+    with open('bmp_unpacked.bmp', 'rb') as f:
+        unpacked = f.read()
 
     print('Original:', getsizeof(raw))
 
     print('Compressed:', getsizeof(packed))
+
+    print('Decompressed:', getsizeof(unpacked))
+
+
 
 
