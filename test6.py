@@ -1,6 +1,10 @@
 import math
 from bitarray import bitarray
 import struct
+from sys import getsizeof
+
+def pack(x):
+    return struct.pack('B', x)
 
 class LZ77Compressor:
     """
@@ -36,9 +40,8 @@ class LZ77Compressor:
                 (bestMatchDistance, bestMatchLength) = match
 
                 output_buffer.append(True)
-
-                output_buffer.frombytes(chr(bestMatchDistance >> 4))
-                output_buffer.frombytes(chr(((bestMatchDistance & 0xf) << 4) | bestMatchLength))
+                output_buffer.frombytes(pack(bestMatchDistance >> 4))
+                output_buffer.frombytes(pack(((bestMatchDistance & 0xf) << 4) | bestMatchLength))
 
                 if verbose:
                     print("<1, %i, %i>" % (bestMatchDistance, bestMatchLength))
@@ -159,3 +162,14 @@ class LZ77Compressor:
 if __name__ == '__main__':
     compressor = LZ77Compressor()
     compressor.compress('bmp (2).bmp', output_file_path='bmp_packed.bmp')
+    compressor.decompress()
+    with open('bmp (2).bmp', 'rb') as f:
+        raw = f.read()
+    with open('bmp_packed.bmp', 'rb') as f:
+        packed = f.read()
+
+    print('Original:', getsizeof(raw))
+
+    print('Compressed:', getsizeof(packed))
+
+
