@@ -1,59 +1,74 @@
 import pickle
+from sys import getsizeof
+import struct
+import io
 
-with open('14284907446_733a076fab_n.jpg', 'rb') as f:
-    data = str(f.read())
+from PIL import Image
+data = open('bmp (2).bmp', 'rb').read()
+# print(data)
 
-
-dictionary_size = 256
-dictionary = {chr(i): i for i in range(dictionary_size)}
-string = ""             # String is null.
-compressed_data = []    # variable to store the compressed data.
 maximum_table_size = 2**12
-# iterating through the input symbols.
-# LZW Compression algorithm
-for symbol in data:
-    string_plus_symbol = string + symbol  # get input symbol.
-    if string_plus_symbol in dictionary:
-        string = string_plus_symbol
-    else:
+
+def compress(data):
+    dictionary_size = 256
+    dictionary = {bytes(chr(i), encoding='utf8'): i for i in range(dictionary_size)}
+    # print(dictionary)
+    string = b""
+    dictionary[string] = dictionary_size
+    dictionary_size += 1
+    compressed_data = []
+
+    for symbol in data:
+        symbol = struct.pack('B', symbol)
+        string_plus_symbol = string + symbol
+        # print(string_plus_symbol)
+        if string_plus_symbol in dictionary:
+            string = string_plus_symbol
+        else:
+            try:
+                compressed_data.append(dictionary[string])
+                # print('get previous from dct')
+            except:
+                # print('-')
+                dictionary[string] = dictionary_size
+                dictionary_size += 1
+            if(len(dictionary) <= maximum_table_size):
+                dictionary[string_plus_symbol] = dictionary_size
+                dictionary_size += 1
+                # print('add to dct previous + new')
+            string = symbol
+    if string in dictionary:
         compressed_data.append(dictionary[string])
-        if(len(dictionary) <= maximum_table_size):
-            dictionary[string_plus_symbol] = dictionary_size
-            dictionary_size += 1
-        string = symbol
+    return compressed_data, dictionary_size, dictionary
 
-if string in dictionary:
-    compressed_data.append(dictionary[string])
+def decompress(compressed_data, dict_size):
+    next_code = 256
+    decompressed_data = b""
+    string = b""
+    dictionary_size = dict_size
+    dictionary = dict([(x, bytes(chr(x), encoding='utf8')) for x in range(dictionary_size)])
+    dictionary[dictionary_size] = string
+    dictionary_size += 1
+    for code in compressed_data:
+        if not (code in dictionary):
+            dictionary[code] = string + string[0]
+        decompressed_data += dictionary[code]
+        if not(len(string) == 0):
+            dictionary[next_code] = string + struct.pack('B', dictionary[code][0])
+            next_code += 1
+        string = dictionary[code]
+    return decompressed_data
 
-c = pickle.dumps(compressed_data)
-with open('file1.txt', 'wb') as f:
-    f.write(c)
+if __name__ == '__main__':
+    print('Original:', getsizeof(data))
+    compressed, size, dct = compress(data)
+    dct = {v: k for k, v in dct.items()}
 
+    # s = pickle.dumps(b''.join([dct[x] for x in compressed]))
+    s = pickle.dumps(b''.join([dct[x] for x in compressed]))
 
-with open('file1.txt', 'rb') as f:
-    compressed_data = pickle.loads(f.read())
+    print('Compressed:', getsizeof(s))
 
-next_code = 256
-decompressed_data = ""
-string = ""
+    decompressed = decompress(data, size, dct)
+    print('Decompressed:', getsizeof(decompressed))
 
-# Reading the compressed file.
-
-# Building and initializing the dictionary.
-dictionary_size = 256
-dictionary = dict([(x, chr(x)) for x in range(dictionary_size)])
-
-# iterating through the codes.
-# LZW Decompression algorithm
-for code in compressed_data:
-    if not (code in dictionary):
-        dictionary[code] = string + (string[0])
-    decompressed_data += dictionary[code]
-    if not(len(string) == 0):
-        dictionary[next_code] = string + (dictionary[code][0])
-        next_code += 1
-    string = dictionary[code]
-
-
-with open('file1.txt', 'w') as f:
-    f.write(str(decompressed_data))
